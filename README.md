@@ -19,15 +19,15 @@ react-native link
 #### iOS
 * See [Linking Libraries](http://facebook.github.io/react-native/docs/linking-libraries-ios.html)
 OR
-* Drag RCTAes.xcodeproj to your project on Xcode.
-* Click on your main project file (the one that represents the .xcodeproj) select Build Phases and drag libRCTAes.a from the Products folder inside the RCTAes.xcodeproj.
+* Drag RCTAesForked.xcodeproj to your project on Xcode.
+* Click on your main project file (the one that represents the .xcodeproj) select Build Phases and drag libRCTAesForked.a from the Products folder inside the RCTAesForked.xcodeproj.
 
 #### (Android)
 ##### Untested!
 ```gradle
 ...
 include ':react-native-aes'
-project(':react-native-aes').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-aes/android/RCTAes')
+project(':react-native-aes').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-aes/android/RCTAesForked')
 ```
 
 * In `android/app/build.gradle`
@@ -44,14 +44,14 @@ dependencies {
 
 ```java
 ......
-import com.tectiv3.aes.RCTAesPackage;
+import com.tectiv3.aesforked.RCTAesPackage;
 
 ......
 
 @Override
 protected List<ReactPackage> getPackages() {
    ......
-   new RCTAesPackage(),
+   new RCTAesForkedPackage(),
    ......
 }
 ```

@@ -1,4 +1,4 @@
-package com.tectiv3.aes;
+package com.tectiv3.aesforked;
 
 import android.widget.Toast;
 
@@ -39,48 +39,49 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Callback;
 
-public class RCTAes extends ReactContextBaseJavaModule {
+public class RCTAesForked extends ReactContextBaseJavaModule {
 
-    private static final String CIPHER_ALGORITHM = "AES/CBC/PKCS7Padding";
+    private static final String CIPHER_ALGORITHM = "AES";
     public static final String HMAC_SHA_256 = "HmacSHA256";
     private static final String KEY_ALGORITHM = "AES";
     private static final String SECRET_KEY_ALGORITHM = "PBEWithSHA256And256BitAES-CBC-BC";
     private static final Integer ROUNDS = 5000;
-    private static final Integer SHA512_DIGEST_LENGTH = 64;
 
-    public RCTAes(ReactApplicationContext reactContext) {
+    public RCTAesForked(ReactApplicationContext reactContext) {
         super(reactContext);
     }
 
     @Override
     public String getName() {
-        return "RCTAes";
+        return "RCTAesForked";
     }
-
     @ReactMethod
-    public void encrypt(String data, String keyBase64, String ivBase64, Promise promise) {
+    public void encrypt(final String plainText, final String key,final String iv, Promise promise){
         try {
-            String result = encrypt(data, keyBase64, ivBase64);
-            promise.resolve(result);
+            CryptLib _crypt = new CryptLib();
+            String encrytedText = _crypt.encrypt(plainText, key, iv); //encrypt
+            promise.resolve(encrytedText);
         } catch (Exception e) {
-            promise.reject("-1", e.getMessage());
+            promise.reject("-1","encrypt failed");
         }
     }
 
     @ReactMethod
-    public void decrypt(String data, String pwd, String iv, Promise promise) {
+    public void decrypt(final String encryptedText, final String key, final String iv, Promise promise){
         try {
-            String strs = decrypt(data, pwd, iv);
-            promise.resolve(strs);
+            CryptLib _crypt = new CryptLib();
+            String plainText = _crypt.decrypt(encryptedText, key,iv); //decrypt
+            promise.resolve(plainText);
         } catch (Exception e) {
-            promise.reject("-1", e.getMessage());
+            promise.reject("-1","decrypt failed");
         }
+
     }
 
     @ReactMethod
     public void pbkdf2(String pwd, String salt, Promise promise) {
         try {
-            String strs = pbkdf2(pwd, salt, ROUNDS, SHA512_DIGEST_LENGTH);
+            String strs = pbkdf2(pwd, salt, ROUNDS, 16);
             promise.resolve(strs);
         } catch (Exception e) {
             promise.reject("-1", e.getMessage());
@@ -138,16 +139,14 @@ public class RCTAes extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void randomKey(Integer length, Promise promise) {
+    public void randomKey(Integer length, Promise promise){
         try {
-            byte[] key = new byte[length];
-            SecureRandom rand = new SecureRandom();
-            rand.nextBytes(key);
-            String keyHex = bytesToHex(key);
-            promise.resolve(keyHex);
+            String iv = CryptLib.generateRandomIV(length);
+            promise.resolve(iv);
         } catch (Exception e) {
-            promise.reject("-1", e.getMessage());
+            promise.reject("-1","gen iv failed");
         }
+
     }
 
     private String shaX(String data, String algorithm) throws Exception {

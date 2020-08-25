@@ -1,5 +1,5 @@
 //
-//  AesCrypt.m
+//  AesCryptForked.m
 //
 //  Created by tectiv3 on 10/02/17.
 //  Copyright © 2017 tectiv3. All rights reserved.
@@ -9,15 +9,25 @@
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonKeyDerivation.h>
 
-#import "AesCrypt.h"
+#import "AesCryptForked.h"
 
-@implementation AesCrypt
+@implementation AesCryptForked
 
 + (NSString *) toHex:(NSData *)nsdata {
-    NSString * hexStr = [NSString stringWithFormat:@"%@", nsdata];
-    for(NSString * toRemove in [NSArray arrayWithObjects:@"<", @">", @" ", nil])
-        hexStr = [hexStr stringByReplacingOccurrencesOfString:toRemove withString:@""];
-    return hexStr;
+    NSMutableData *result = [NSMutableData dataWithLength:2*nsdata.length];
+        unsigned const char* src = nsdata.bytes;
+        unsigned char* dst = result.mutableBytes;
+        unsigned char t0, t1;
+
+        for (int i = 0; i < nsdata.length; i ++ ) {
+             t0 = src[i] >> 4;
+             t1 = src[i] & 0x0F;
+
+             dst[i*2] = 48 + t0 + (t0 / 10) * 39;
+             dst[i*2+1] = 48 + t1 + (t1 / 10) * 39;
+        }
+
+        return [[NSString alloc] initWithData:result encoding:NSASCIIStringEncoding];
 }
 
 + (NSData *) fromHex: (NSString *)string {
@@ -39,7 +49,7 @@
     NSData *saltData = [salt dataUsingEncoding:NSUTF8StringEncoding];
 
     // Hash key (hexa decimal) string data length.
-    NSMutableData *hashKeyData = [NSMutableData dataWithLength:CC_SHA512_DIGEST_LENGTH];
+    NSMutableData *hashKeyData = [NSMutableData dataWithLength:32];
 
     // Key Derivation using PBKDF2 algorithm.
     int status = CCKeyDerivationPBKDF(

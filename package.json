@@ -4,7 +4,7 @@
     "description": "AES crypto native module for react-native",
     "main": "index.js",
     "author": "tectiv3",
-    "license": "GPL-3.0",
+    "license": "MIT",
     "keywords": [
         "react-native",
         "react-component",

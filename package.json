@@ -1,5 +1,5 @@
 {
-    "name": "react-native-aes-crypto",
+    "name": "@metamask/react-native-aes-crypto",
     "version": "1.2.1",
     "description": "AES crypto native module for react-native",
     "main": "index.js",
@@ -20,13 +20,13 @@
         "pbkdf2",
         "hmac256"
     ],
-    "homepage": "https://github.com/tectiv3/react-native-aes",
+    "homepage": "https://github.com/MetaMask/react-native-aes-crypto-forked",
     "bugs": {
-        "url": "https://github.com/tectiv3/react-native-aes/issues"
+        "url": "https://github.com/MetaMask/react-native-aes-crypto-forked/issues"
     },
     "repository": {
         "type": "git",
-        "url": "git://github.com/tectiv3/react-native-aes.git"
+        "url": "https://github.com/MetaMask/react-native-aes-crypto-forked.git"
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
